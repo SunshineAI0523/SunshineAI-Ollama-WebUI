@@ -1,0 +1,104 @@
+// // For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// // README at: https://github.com/devcontainers/templates/tree/main/src/java
+{
+	"name": "SunshineAI-Docker-NetStorage",
+	"privileged": true,
+	"init": true,
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	// "image": "jamesmith0817/debian-rootfs-xfce",
+	"build": {
+		"dockerfile": "Dockerfile", // 你的Dockerfile路径
+		"context": "."
+	  },
+	"features": {
+		"ghcr.io/devcontainers/features/nvidia-cuda:1": {
+			"installCudnn": true,
+			"installCudnnDev": true,
+			"installNvtx": true,
+			"installToolkit": true,
+			"cudaVersion": "12.4",
+			"cudnnVersion": "9.7.1.26"
+		},
+		"ghcr.io/devcontainers/features/oryx:1": {},
+		"ghcr.io/devcontainers/features/powershell:1": {
+			"version": "latest",
+			"modules": "",
+			"powershellProfileURL": ""
+		},
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"installZsh": "boolean",
+			"configureZshAsDefaultShell": "false",
+			"installOhMyZsh": "true",
+			"installOhMyZshConfig": "true",
+			"upgradePackages": "true",
+			"username": "administrator",
+			"userUid": "1100",
+			"userGid": "1100",
+			"nonFreePackages": "true"
+		},
+		"ghcr.io/devcontainers/features/python:1": {
+			"version": "3.11",
+			"installTools": "true",
+			"toolsToInstall": "open-webui",
+			"optimize": "true",
+			"enableShared": "true",
+			"installPath": "/usr/local/python",
+			"installJupyterlab": "true",
+			"configureJupyterlabAllowOrigin": "0.0.0.0"
+		},
+		"ghcr.io/devcontainers/features/conda:1": {
+			"version": "latest",
+			"addCondaForge": true
+		},
+		"ghcr.io/mamba-org/devcontainer-features/micromamba:1": {
+			"version": "latest",
+			"allowReinstall": true,
+			"autoActivate": true,
+			"channels": "conda-forge",
+			"envFile": "",
+			"envName": ""
+		}
+	},
+	// Configure tool-specific properties.
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			"settings": {},
+			"extensions": [
+				"streetsidesoftware.code-spell-checker",
+				"ms-vscode-remote.remote-containers",
+				"ms-vscode-remote.vscode-remote-extensionpack",
+				"ms-vscode.remote-server",
+				"ms-vscode-remote.remote-ssh",
+				"ms-vscode.remote-explorer",
+				"ms-vscode.remote-repositories",
+				"ms-vscode-remote.remote-ssh-edit",
+				"ms-azuretools.vscode-docker",
+				"RooVeterinaryInc.roo-cline",
+				"github.vscode-github-actions",
+				"vscjava.vscode-java-pack",
+				"vscjava.vscode-spring-initializr",
+				"vscjava.vscode-java-test",
+				"vscjava.vscode-maven",
+				"vscjava.vscode-java-debug",
+				"vscjava.vscode-java-dependency",
+				"redhat.java",
+				"vscjava.vscode-spring-boot-dashboard",
+				"vmware.vscode-spring-boot",
+				"vmware.vscode-boot-dev-pack",
+				"saoudrizwan.claude-dev"			
+			]
+		}
+	},
+
+	// "workspaceFolder": "/SunshineAI/SunshineAI-SDWebUI/",
+
+// 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [8123,3389,5244,5212],
+
+// 	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "python3 --version && pip version",
+
+// 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	"remoteUser": "administrator"
+}

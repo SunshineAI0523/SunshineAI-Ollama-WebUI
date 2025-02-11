@@ -1,74 +1,117 @@
-为了在 GitHub Actions 中构建 Debian 系统的 rootfs，并使用 `debootstrap` 工具和指定的软件包，你可以按照以下步骤操作。以下是一个完整的 GitHub Actions 工作流配置文件（`.github/workflows/build-rootfs.yml`），它描述了如何完成这个任务。
+# SunshineAI Ollama WebUI
 
-```yaml
-name: Build Debian RootFS
 
-on:
-  workflow_dispatch:  # 你可以根据需要触发这个工作流，例如通过手动触发
+这是一个基于 Docker 快速部署Ollama和Open-WebUI 的仓库,集成了多种常用开发工具和服务。
 
-jobs:
-  build-rootfs:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+## 主要特性
 
-      - name: Set up QEMU user mode emulator (for debootstrap)
-        run: sudo apt-get update && sudo apt-get install -y qemu qemu-utils qemu-system-common debootstrap
+- 基于 Debian Bookworm 的基础镜像
+- 集成多种开发工具和服务:
+  - Cloudreve 网盘系统
+  - AList 文件列表程序
+  - MinIO 对象存储
+  - Aria2 下载工具
+  - 支持 CUDA 开发环境
+  - Python开发环境
+- 预配置的目录结构,便于文件管理
+- 支持 VS Code Dev Container 开发
+- 支持 GitHub Codespaces
 
-      - name: Create working directory
-        run: mkdir -p rootfs
+## 技术栈
 
-      - name: Bootstrap Debian rootfs
-        run: |
-          set -e
-          DEBIAN_FRONTEND=noninteractive debootstrap --variant=buildd --arch=amd64 bullseye rootfs http://deb.debian.org/debian
+- Docker 容器技术
+- VS Code Dev Container
+- Supervisor 进程管理
+- CUDA/CUDNN 深度学习环境
+- Python/Conda 环境
+- Java 开发环境
+- Rust 工具链
 
-      - name: Install required packages
-        run: |
-          set -e
-          chroot rootfs /bin/bash -c "
-            apt-get update &&
-            apt-get install -y apt-utils bash-completion bc bzip2 curl dialog diffutils findutils gnupg gnupg2 gpgsm hostname iproute2 iputils-ping keyutils language-pack-en less libcap2-bin libkrb5-3 libnss-mdns libnss-myhostname libvte-common locales lsof man-db manpages mtr ncurses-base openssh-client passwd pigz pinentry-curses procps rsync sudo tcpdump time traceroute tree tzdata unzip util-linux wget xauth xz-utils zip libgl1 libegl1-mesa libgl1-mesa-glx libegl1 libglx-mesa0 libvulkan1 mesa-vulkan-drivers git git-lfs &&
-            # Special case for libvte-2.9*-common
-            if apt-cache search libvte-2.9 | grep -q libvte-2.9; then
-              apt-get install -y $(apt-cache search libvte-2.9 | grep -oP '(?<=libvte-2.9\d+-common)\S+')
-            fi
-          "
+## 快速开始
 
-      - name: Tar the rootfs
-        run: |
-          cd rootfs
-          sudo tar --numeric-owner -cvf ../debian-rootfs.tar .
-          cd ..
+### 使用 VS Code Dev Container
 
-      - name: Upload rootfs tarball
-        uses: actions/upload-artifact@v2
-        with:
-          name: debian-rootfs
-          path: debian-rootfs.tar
+1. 安装 VS Code 和 Docker
+2. 安装 VS Code Remote Development 插件包
+3. 克隆本仓库
+4. 在 VS Code 中打开仓库目录
+5. 点击左下角绿色按钮,选择 "Reopen in Container"
+
+### 使用 GitHub Codespaces
+
+1. 在 GitHub 仓库页面点击 "Code" 按钮
+2. 选择 "Open with Codespaces"
+3. 点击 "New codespace"
+
+## 目录结构
+
+容器内预配置了以下目录结构:
+
+```
+/DATA/
+├── AppData
+├── Documents
+├── Downloads
+├── Gallery
+├── Compressed
+├── Desktop
+├── Games
+├── General
+├── ISOS
+├── Media
+│   ├── Movies
+│   ├── Music
+│   └── TV_Shows
+├── Others
+├── Programs
+├── Public
+├── Templates
+├── Tools
+├── Torrents
+└── Videos
 ```
 
-### 解释
+## 服务访问
 
-1. **Checkout repository**: 检出你的仓库代码（尽管这个例子中我们并不需要仓库的代码，但这个步骤通常是标准流程的一部分）。
+容器启动后可访问以下服务:
 
-2. **Set up QEMU user mode emulator (for debootstrap)**: 安装 `qemu` 和 `debootstrap`，`qemu-utils` 和 `qemu-system-common` 是为了支持 `debootstrap` 在某些架构上的运行。
+- Cloudreve: http://localhost:5212
+- AList: http://localhost:5244
+- MinIO: http://localhost:9000
+- Open WebUI: http://localhost:8000
 
-3. **Create working directory**: 创建一个目录来存放 rootfs。
+## 环境变量配置
 
-4. **Bootstrap Debian rootfs**: 使用 `debootstrap` 创建一个 Debian Bullseye 的 rootfs。你可以根据需要更改 Debian 版本（例如 `bullseye` 为 `buster` 等）。
+- MINIO_ROOT_USER: MinIO 管理员用户名(默认:admin)
+- MINIO_ROOT_PASSWORD: MinIO 管理员密码(默认:password)
 
-5. **Install required packages**: 在 chroot 环境中安装所需的软件包。注意，对于 `libvte-2.9*-common`，我们使用了一个简单的条件检查来确保如果存在合适的包，则安装它。这个检查可能需要根据实际可用版本进行调整。
+## 开发工具支持
 
-6. **Tar the rootfs**: 将 rootfs 目录打包成一个 tar 文件。
+- Python 3.11 + Jupyter Lab
+- CUDA 12.4 + CUDNN 9.7
+- PowerShell
+- 常用开发工具(git、curl、wget等)
 
-7. **Upload rootfs tarball**: 将生成的 tar 文件作为构建产物上传，以便后续下载或使用。
+## 注意事项
 
-### 注意事项
+1. 首次启动容器时会自动安装配置各项服务,可能需要一定时间
+2. 建议在使用前修改默认密码
+3. 如需持久化数据,请将重要数据目录映射到宿主机
+4. CUDA 相关功能需要宿主机支持 NVIDIA GPU
 
-- **Debian 版本**：确保 `debootstrap` 的 URL 和版本标签（如 `bullseye`）与你想要构建的 Debian 版本相匹配。
-- **包名匹配**：对于带有通配符的包名（如 `libvte-2.9*-common`），你可能需要调整脚本以匹配实际可用的包版本。
-- **依赖关系**：某些包可能有依赖关系，`apt-get install -y` 会自动处理这些依赖关系。
+## 许可证
 
-将上述 YAML 内容保存为 `.github/workflows/build-rootfs.yml` 并推送到你的 GitHub 仓库后，你应该能够在 Actions 页面上手动触发这个工作流，并查看构建结果。
+本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
+
+## 贡献
+
+欢迎提交 Issue 和 Pull Request 来帮助改进这个项目。
+
+## 相关项目
+
+- [VS Code Remote Development](https://aka.ms/vscode-remote/containers)
+- [GitHub Codespaces](https://github.com/features/codespaces)
+- [Cloudreve](https://github.com/cloudreve/Cloudreve)
+- [AList](https://github.com/alist-org/alist)
+- [MinIO](https://min.io/)
+```

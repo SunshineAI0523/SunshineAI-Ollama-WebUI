@@ -37,9 +37,9 @@
 			"nonFreePackages": "true"
 		},
 		"ghcr.io/devcontainers/features/python:1": {
-			"version": "3.11",
+			"version": "3.13",
 			"installTools": "true",
-			"toolsToInstall": "open-webui",
+			"toolsToInstall": "home-assistant==2024.12.5",
 			"optimize": "true",
 			"enableShared": "true",
 			"installPath": "/usr/local/python",
@@ -100,5 +100,5 @@
 	"postCreateCommand": "python3 --version && pip version",
 
 // 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	"remoteUser": "administrator"
+	"remoteUser": "Administrator"
 }

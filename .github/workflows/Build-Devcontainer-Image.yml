@@ -35,15 +35,15 @@ jobs:
       run: |
         # Build the Docker image using the devcontainer.json configuration
         npm install -g @devcontainers/cli 
-        devcontainer build --workspace-folder . --image-name jamesmith0817/net-storage:latest
+        devcontainer build --workspace-folder . --image-name jamesmith0817/ollama-webui:latest
 
     - name: Save Docker image to tar
       run: |
         # Save the built Docker image to a tar file
-        docker save jamesmith0817/net-storage:latest -o net-storage.tar  
+        docker save jamesmith0817/ollama-webui:latest -o ollama-webui.tar  
 
     - name: Upload Docker image artifact
       uses: actions/upload-artifact@v4
       with:
         name: devcontainer-image
-        path: net-storage.tar
+        path: ollama-webui.tar

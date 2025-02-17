@@ -39,7 +39,7 @@
 		"ghcr.io/devcontainers/features/python:1": {
 			"version": "3.13",
 			"installTools": "true",
-			"toolsToInstall": "home-assistant==2024.12.5",
+			"toolsToInstall": "homeassistant==2024.12.5",
 			"optimize": "true",
 			"enableShared": "true",
 			"installPath": "/usr/local/python",

@@ -56,7 +56,7 @@ RUN apt install dumb-init systemd firefox* -y
 RUN apt install dumb-init systemd -y
 RUN sudo adduser cloudreve --quiet --disabled-login --disabled-password --home /home/cloudreve --gecos ""
 RUN sudo adduser alist --quiet --disabled-login --disabled-password --home /home/alist  --gecos ""
-RUN sudo adduser homeassistant --quiet --disabled-login --disabled-password --home /home/homeassistant --gecos ""
+# RUN sudo adduser homeassistant --quiet --disabled-login --disabled-password --home /home/homeassistant --gecos ""
 RUN sudo adduser minio --quiet --disabled-login --disabled-password --home /home/minio --gecos ""
 RUN sudo adduser meilisearch --quiet --disabled-login --disabled-password --home /home/meilisearch --gecos ""
 RUN wget "https://github.com/cloudreve/Cloudreve/releases/download/3.8.3/cloudreve_3.8.3_linux_amd64.tar.gz" -O cloudreve.tar.gz
@@ -78,7 +78,7 @@ RUN chmod 750 /var/lib/meilisearch
 RUN curl https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml > /etc/meilisearch.toml
 COPY supervisord.conf /etc/supervisor/
 COPY cloudreve.conf /etc/supervisor/conf.d/
-COPY homeassistant.conf /etc/supervisor/conf.d/
+# COPY homeassistant.conf /etc/supervisor/conf.d/
 COPY open-webui.conf /etc/supervisor/conf.d/
 COPY alist.conf /etc/supervisor/conf.d/
 COPY ollama.conf /etc/supervisor/conf.d/
